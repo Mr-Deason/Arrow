@@ -4,30 +4,41 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Date;
 import java.util.Scanner;
+
+
+import common.Logger;
+import common.Operation;
 
 public class Client {
 
-	public static void main(String[] args) {
+	Logger logger = null;
+	
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		
-		TCPClient("127.0.0.1", 18409);
+		Client client = new Client();
+		client.TCPClient("127.0.0.1", 18409);
 		
 	}
 	
-	public static void TCPClient(String hostname, int port){
+	public void TCPClient(String hostname, int port) throws IOException{
 		
 		Socket socket = null;
 		BufferedReader reader = null;
 		Scanner in = null;
 		BufferedWriter writer = null;
-		
-		
+
+		logger = new Logger("./client/client.log");
+		doBeforeQuit();
 		try{
+			logger.append(new Date(), "connect to " + hostname + ':' + port + "...");
 			socket = new Socket(hostname, port);
+			logger.append(new Date(), "connect successfully!");
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new Scanner(System.in);
@@ -35,7 +46,7 @@ public class Client {
 			e.printStackTrace();
 		}
 		try {
-			Scanner scan = new Scanner(new File("./script.txt"));
+//			Scanner scan = new Scanner(new File("./script.txt"));
 //			while (scan.hasNextLine()) {
 //				String str = scan.nextLine();
 //				if (isCmdValid(str)) {
@@ -49,11 +60,15 @@ public class Client {
 				if (str.trim().equals("")) {
 					continue;
 				}
-				if (isCmdValid(str)) {
-					writer.write(str+"\n");
-					writer.flush();
-					System.out.println(reader.readLine());
+				try {
+					Operation op = new Operation(str);
+				}catch (Exception e) {
+					logger.append(new Date(), "[ERROR] " + e.getMessage());
+					continue;
 				}
+				writer.write(str+"\n");
+				writer.flush();
+				System.out.println(reader.readLine());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +76,21 @@ public class Client {
 		
 	}
 	
-	public static boolean isCmdValid(String cmd) {
+	public void doBeforeQuit() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+		@Override
+		public void run() {
+			try {
+				logger.append(new Date(), "client quit.");
+				logger.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		});
+	}
+	
+	public boolean isCmdValid(String cmd) {
 		return true;
 	}
 
