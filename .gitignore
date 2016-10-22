@@ -64,3 +64,5 @@ $RECYCLE.BIN/
 .settings/
 .classpath
 .project
+*.log
+*.log

@@ -36,9 +36,9 @@ public class Client {
 		logger = new Logger("./client/client.log");
 		doBeforeQuit();
 		try{
-			logger.append(new Date(), "connect to " + hostname + ':' + port + "...");
+			logger.append(new Date(), "[INFO] connect to " + hostname + ':' + port + "...");
 			socket = new Socket(hostname, port);
-			logger.append(new Date(), "connect successfully!");
+			logger.append(new Date(), "[INFO] connect successfully!");
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			in = new Scanner(System.in);
@@ -68,7 +68,10 @@ public class Client {
 				}
 				writer.write(str+"\n");
 				writer.flush();
-				System.out.println(reader.readLine());
+				logger.append(new Date(), "[INFO] send request \"" + str + "\" to server");
+				String res = reader.readLine();
+				logger.append(new Date(), "[INFO] receive response \"" + res + "\" from server");
+				System.out.println(res);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,10 +91,6 @@ public class Client {
 			}
 		}
 		});
-	}
-	
-	public boolean isCmdValid(String cmd) {
-		return true;
 	}
 
 }

@@ -1,5 +1,7 @@
 package common;
 
+import java.util.HashMap;
+
 public class Operation {
 	
 	private String op = null;
@@ -25,7 +27,29 @@ public class Operation {
 			value = args[2];
 		}
 	}
-
+	
+	public String exec(HashMap<String, String> map) throws Exception{
+		if (op.toUpperCase().equals("GET")) {
+			String res = map.get(key);
+			if (res == null) {
+				throw new Exception("not found!");
+			}
+			return "0 " + res;
+		}
+		if (op.toUpperCase().equals("PUT")) {
+			map.put(key, value);
+			return "0";
+		}
+		if (op.toUpperCase().equals("DELETE")) {
+			String res = map.get(key);
+			if (res == null) {
+				throw new Exception("not found!");
+			}
+			map.remove(key);
+			return "0";
+		}
+		return "0";
+	}
 
 
 	public String getOp() {
