@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 
+
 import common.Logger;
 import common.Operation;
 
@@ -21,6 +22,7 @@ public class Client {
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
+		System.out.println(args[0] + "," + args[1]);
 		Client client = new Client();
 		client.TCPClient("127.0.0.1", 18409);
 		

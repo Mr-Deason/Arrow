@@ -34,7 +34,7 @@ public class UDPServer extends Thread {
 			logger.append(new Date(), "[INFO] UDP server started, waiting for client...");
 			byte[] receive = null;
 			byte[] send = null;
-			while (true) {
+			//while (true) {
 				receive = new byte[1024];
 				DatagramPacket packet = new DatagramPacket(receive, receive.length);
 
@@ -57,7 +57,7 @@ public class UDPServer extends Thread {
 				DatagramPacket sendPacket = new DatagramPacket(send, send.length, packet.getAddress(), port);
 				socket.send(sendPacket);
 
-			}
+			//}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

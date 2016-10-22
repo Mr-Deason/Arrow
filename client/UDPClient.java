@@ -26,6 +26,7 @@ public class UDPClient {
 			DatagramPacket request = new DatagramPacket(m, message.length(), hostname, port);
 			socket.send(request);
 			
+			Thread.sleep(2000);
 			// Reply
 			byte[] buffer = new byte[1024];
 			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
