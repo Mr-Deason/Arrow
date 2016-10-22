@@ -1,3 +1,4 @@
+package client;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -45,6 +46,9 @@ public class Client {
 //			}
 			while (in.hasNextLine()) {
 				String str = in.nextLine();
+				if (str.trim().equals("")) {
+					continue;
+				}
 				if (isCmdValid(str)) {
 					writer.write(str+"\n");
 					writer.flush();

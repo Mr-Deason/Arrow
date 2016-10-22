@@ -1,3 +1,4 @@
+package server;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -24,9 +25,6 @@ public class TCPServerThread extends Thread {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			while (true) {
 				String line = reader.readLine();
-				if (line.trim().equals("")) {
-					continue;
-				}
 				System.out.println("Client: " + line);
 				String res = operation(line);
 				System.out.println(res);
@@ -39,7 +37,10 @@ public class TCPServerThread extends Thread {
 	}
 
 	public String operation(String str) {
+		
 		String[] args = str.split(" ");
+		
+		//GET or DELETE
 		if (args.length == 2) {
 			String key = args[1];
 			String value = map.get(key);
@@ -52,6 +53,7 @@ public class TCPServerThread extends Thread {
 				map.remove(key);
 				return "deleted";
 			}
+		// PUT
 		} else {
 			String key = args[1];
 			String value = args[2];
