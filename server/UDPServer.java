@@ -43,11 +43,11 @@ public class UDPServer extends Thread {
 				String response = null;
 
 				logger.append(new Date(),
-						"[INFO] reveived datagram request \"" + request + "\" from client <" + packet.getAddress());
+						"[INFO] reveived datagram request \"" + request + "\" from client <" + packet.getAddress() + ">");
 				try {
 					Operation op = new Operation(request);
 					response = op.exec(map);
-					logger.append(new Date(), "[INFO] request from <" + socket.getInetAddress() + "> finished");
+					logger.append(new Date(), "[INFO] request from <" + packet.getAddress() + "> finished");
 				} catch (Exception e) {
 					response = "-1 " + e.getMessage();
 					logger.append(new Date(),
