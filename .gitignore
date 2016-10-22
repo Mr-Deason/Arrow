@@ -61,6 +61,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-.settings/org.eclipse.jdt.core.prefs
+.settings/
 .classpath
 .project
