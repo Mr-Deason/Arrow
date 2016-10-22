@@ -34,12 +34,12 @@ public class UDPServer extends Thread {
 			logger.append(new Date(), "[INFO] UDP server started, waiting for client...");
 			byte[] receive = null;
 			byte[] send = null;
-			//while (true) {
+			while (true) {
 				receive = new byte[1024];
 				DatagramPacket packet = new DatagramPacket(receive, receive.length);
 
 				socket.receive(packet);
-				String request = new String(packet.getData());
+				String request = new String(packet.getData()).trim();
 				String response = null;
 
 				logger.append(new Date(),
@@ -51,13 +51,13 @@ public class UDPServer extends Thread {
 				} catch (Exception e) {
 					response = "-1 " + e.getMessage();
 					logger.append(new Date(),
-							"[ERROR] request from <" + socket.getInetAddress() + ">: " + e.getMessage());
+							"[ERROR] request from <" + packet.getAddress() + ">: " + e.getMessage());
 				}
 				send = response.getBytes();
-				DatagramPacket sendPacket = new DatagramPacket(send, send.length, packet.getAddress(), port);
+				DatagramPacket sendPacket = new DatagramPacket(send, send.length, packet.getAddress(), packet.getPort());
 				socket.send(sendPacket);
 
-			//}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
