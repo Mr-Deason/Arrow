@@ -37,7 +37,7 @@ public class TCPServerThread extends Thread {
 				logger.append(new Date(), "[INFO] received request \"" + line + "\" from <" + socket.getInetAddress() + '>');
 				String res = null;
 				try {
-				Operation op = new Operation(line);
+					Operation op = new Operation(line);
 					res = op.exec(map);
 					logger.append(new Date(), "[INFO] request from <" + socket.getInetAddress() + "> finished");
 				}catch (Exception e) {

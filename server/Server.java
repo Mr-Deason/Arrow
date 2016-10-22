@@ -20,6 +20,7 @@ public class Server {
 		logger = new Logger("./server/server.log");
 		
 		new TCPServer(port, map, logger);
+		new UDPServer(port, map, logger);
 	}
 
 }
