@@ -1,0 +1,23 @@
+Project1
+
+Team Members:
+Yue Shen 1668045
+Kuangdi Yu
+Haoming Li 1451488
+
+Envoronment:
+Java
+
+Assignment Overview:
+This is the first project that ask us to write a network program to create the communication between the client 
+and sever. There are two protocol mechanisms: TCP and UDP. The design of TCP is that: the server contains 
+a SeverSocket object to provide TCP connections and a Socket object used to communicate while the client only 
+contains a Socket object. When the connection is successful, these two Sockets communicate with each other. 
+The design of UDP is that: when the data is to be sent, a datagram packet should be created, where the hostname 
+and receive port should be defined. Then the DatagramSocket method send() need to be called to send datagram. 
+When the data is to be received, a designated port DatagramSocket should be created. Then the method receive() 
+needs to be called to receive the datagram and store it in the buffer. Finally, call the method getData() to 
+achieve the data. In addition, we also achieved three options in both UDP and TCP: put(key value), get(key) and 
+delete(key).  
+
+Technical Impression
