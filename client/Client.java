@@ -24,8 +24,10 @@ public class Client {
 		// TODO Auto-generated method stub
 		//System.out.println(args[0] + "," + args[1]);
 		Client client = new Client();
-		client.TCPClient("127.0.0.1", 18409);
+		//client.TCPClient("127.0.0.1", 18409);
 		
+		RPCClient rpcClient = new RPCClient("127.0.0.1", 18410, new Logger("./client/client.log"));
+		rpcClient.exec();
 	}
 	
 	public void TCPClient(String hostname, int port) throws IOException{

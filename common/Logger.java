@@ -14,6 +14,10 @@ public class Logger {
 		log.seek(log.length());
 	}
 
+	public void append(String msg) throws IOException {
+		append(new Date(), msg);
+	}
+	
 	public void append(Date date, String msg) throws IOException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
 		String str = '[' + sdf.format(date) + "] " + msg + "\r\n";

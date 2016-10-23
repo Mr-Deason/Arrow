@@ -13,14 +13,14 @@ public class Operation {
 		if (args.length < 2 || args.length > 3) {
 			throw new Exception("malformed request!");
 		}
-		op = args[0];
+		op = args[0].toUpperCase();
 		if (args.length == 2 ) {
-			if (!op.toUpperCase().equals("GET") && !op.toUpperCase().equals("DELETE")) {
+			if (!op.equals("GET") && !op.equals("DELETE")) {
 				throw new Exception("malformed request!");
 			}
 			key = args[1];
 		} else {
-			if (!op.toUpperCase().equals("PUT")) {
+			if (!op.equals("PUT")) {
 				throw new Exception("malformed request!");
 			}
 			key = args[1];
@@ -29,18 +29,18 @@ public class Operation {
 	}
 	
 	public String exec(HashMap<String, String> map) throws Exception{
-		if (op.toUpperCase().equals("GET")) {
+		if (op.equals("GET")) {
 			String res = map.get(key);
 			if (res == null) {
 				throw new Exception("not found!");
 			}
 			return "0 " + res;
 		}
-		if (op.toUpperCase().equals("PUT")) {
+		if (op.equals("PUT")) {
 			map.put(key, value);
 			return "0";
 		}
-		if (op.toUpperCase().equals("DELETE")) {
+		if (op.equals("DELETE")) {
 			String res = map.get(key);
 			if (res == null) {
 				throw new Exception("not found!");
@@ -62,6 +62,16 @@ public class Operation {
 
 	public String getValue() {
 		return value;
+	}
+	
+	public boolean isGet() {
+		return op.equals("GET");
+	}
+	public boolean isPut() {
+		return op.equals("PUT");
+	}
+	public boolean isDelete() {
+		return op.equals("DELETE");
 	}
 	
 }
