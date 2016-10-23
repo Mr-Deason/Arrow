@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import common.Logger;
 import common.Operation;
-import server.RPCServerI;
+import interfaces.RPCInterf;
 
 public class RPCClient {
 
@@ -33,7 +33,7 @@ public class RPCClient {
 
 	public void start() { 
 		try {
-			RPCServerI server = (RPCServerI) Naming.lookup("rmi://" + hostname + ':' + port + "/RPCServer");
+			RPCInterf server = (RPCInterf) Naming.lookup("rmi://" + hostname + ':' + port + "/RPCServer");
 			while (in.hasNextLine()) {
 				String str = in.nextLine();
 				if (str.trim().equals("")) {

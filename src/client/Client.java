@@ -43,7 +43,7 @@ public class Client {
 		this.port = port;
 
 		try {
-			logger = new Logger("./client/client.log");
+			logger = new Logger("./client.log");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
