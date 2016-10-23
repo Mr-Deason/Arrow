@@ -29,9 +29,9 @@ public class UDPServer extends Thread {
 
 		try {
 
-			logger.append(new Date(), "[INFO] starting UDP server at port " + port + "...");
+			logger.append("[INFO] starting UDP server at port " + port + "...");
 			DatagramSocket socket = new DatagramSocket(port);
-			logger.append(new Date(), "[INFO] UDP server started, waiting for client...");
+			logger.append("[INFO] UDP server started, waiting for client...");
 			byte[] receive = null;
 			byte[] send = null;
 			while (true) {
@@ -42,19 +42,19 @@ public class UDPServer extends Thread {
 				String request = new String(packet.getData()).trim();
 				String response = null;
 
-				logger.append(new Date(),
-						"[INFO] reveived datagram request \"" + request + "\" from client <" + packet.getAddress() + ">");
+				logger.append("[INFO] reveived datagram request \"" + request + "\" from client <" + packet.getAddress()
+						+ ">");
 				try {
 					Operation op = new Operation(request);
 					response = op.exec(map);
-					logger.append(new Date(), "[INFO] request from <" + packet.getAddress() + "> finished");
+					logger.append("[INFO] request from <" + packet.getAddress() + "> finished");
 				} catch (Exception e) {
 					response = "-1 " + e.getMessage();
-					logger.append(new Date(),
-							"[ERROR] request from <" + packet.getAddress() + ">: " + e.getMessage());
+					logger.append("[ERROR] request from <" + packet.getAddress() + ">: " + e.getMessage());
 				}
 				send = response.getBytes();
-				DatagramPacket sendPacket = new DatagramPacket(send, send.length, packet.getAddress(), packet.getPort());
+				DatagramPacket sendPacket = new DatagramPacket(send, send.length, packet.getAddress(),
+						packet.getPort());
 				socket.send(sendPacket);
 
 			}

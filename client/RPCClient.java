@@ -5,10 +5,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Date;
 import java.util.Scanner;
 
-import org.w3c.dom.css.ElementCSSInlineStyle;
 
 import common.Logger;
 import common.Operation;
@@ -21,18 +19,21 @@ public class RPCClient {
 	
 	private Logger logger;
 	
-	public RPCClient(String hostname, int port, Logger logger) {
+	private Scanner in;
+	
+	public RPCClient(String hostname, int port, Logger logger, Scanner in) {
 		this.hostname = hostname;
 		this.port = port;
 		this.logger = logger;
+		this.in = in;
+		
+		start();
 	}
 
 
-	public void exec() { 
+	public void start() { 
 		try {
 			RPCServerI server = (RPCServerI) Naming.lookup("rmi://" + hostname + ':' + port + "/RPCServer");
-			Scanner in = null;
-			in = new Scanner(System.in);
 			while (in.hasNextLine()) {
 				String str = in.nextLine();
 				if (str.trim().equals("")) {

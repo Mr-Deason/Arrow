@@ -1,99 +1,127 @@
 package client;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 
-
-
 import common.Logger;
-import common.Operation;
 
 public class Client {
 
-	Logger logger = null;
-	
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		//System.out.println(args[0] + "," + args[1]);
-		Client client = new Client();
-		//client.TCPClient("127.0.0.1", 18409);
-		
-		RPCClient rpcClient = new RPCClient("127.0.0.1", 18410, new Logger("./client/client.log"));
-		rpcClient.exec();
-	}
-	
-	public void TCPClient(String hostname, int port) throws IOException{
-		
-		Socket socket = null;
-		BufferedReader reader = null;
-		Scanner in = null;
-		BufferedWriter writer = null;
+	private String hostname;
+	private int port;
+	private static HashMap<String, String> map = null;
 
-		logger = new Logger("./client/client.log");
-		doBeforeQuit();
-		try{
-			logger.append(new Date(), "[INFO] connect to " + hostname + ':' + port + "...");
-			socket = new Socket(hostname, port);
-			logger.append(new Date(), "[INFO] connect successfully!");
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			in = new Scanner(System.in);
-		}catch(Exception e){
+	private Logger logger = null;
+
+	public static void main(String[] args) throws IOException {
+
+		String hostname = "127.0.0.1";
+		int port = 18409;
+
+		if (args.length != 0 && args.length != 2) {
+			System.out.println("client can only accept 0 or 2 arguments !");
+			System.exit(-1);
+		}
+		if (args.length == 2) {
+			hostname = args[0];
+			try {
+				port = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				System.out.println("arguments format error !");
+				System.exit(-1);
+			}
+		}
+		Client client = new Client(hostname, port);
+		client.begin();
+	}
+
+	public Client(String hostname, int port) {
+
+		this.hostname = hostname;
+		this.port = port;
+
+		try {
+			logger = new Logger("./client/client.log");
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		try {
-//			Scanner scan = new Scanner(new File("./script.txt"));
-//			while (scan.hasNextLine()) {
-//				String str = scan.nextLine();
-//				if (isCmdValid(str)) {
-//					writer.write(str);
-//					writer.flush();
-//					System.out.println(reader.readLine());
-//				}
-//			}
-			while (in.hasNextLine()) {
-				String str = in.nextLine();
-				if (str.trim().equals("")) {
-					continue;
-				}
-				try {
-					Operation op = new Operation(str);
-				}catch (Exception e) {
-					logger.append(new Date(), "[ERROR] " + e.getMessage());
-					continue;
-				}
-				writer.write(str+"\n");
-				writer.flush();
-				logger.append(new Date(), "[INFO] send request \"" + str + "\" to server");
-				String res = reader.readLine();
-				logger.append(new Date(), "[INFO] receive response \"" + res + "\" from server");
-				System.out.println(res);
+		doBeforeQuit();
+	}
+
+	public void begin() {
+
+		int pChoice, iChoice;
+		Scanner in = new Scanner(System.in);
+
+		System.out.println("Enter a number to select protocol:");
+		System.out.println("[1]TPC");
+		System.out.println("[2]UDP");
+		System.out.println("[3]RPC");
+		while (true) {
+			pChoice = in.nextInt();
+			if (pChoice < 1 || pChoice > 3) {
+				System.out.println("Wrrong input !");
+				continue;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			break;
+		}
+
+		System.out.println("Enter a number to select the source of input:");
+		System.out.println("[1]Console");
+		System.out.println("[2]File");
+
+		while (true) {
+			iChoice = in.nextInt();
+			if (iChoice < 1 || iChoice > 2) {
+				System.out.println("Wrrong input !");
+				continue;
+			}
+			break;
+		}
+
+		in.nextLine();
+		if (iChoice == 2) {
+			System.out.println("Enter the file name (default file \"./kvp-operations.csv\"):");
+			while (true) {
+				String filename = in.nextLine().trim();
+				if (filename.equals("")) {
+					filename = "./kvp-operations.csv";
+				}
+				System.out.println(filename);
+				try {
+					in = new Scanner(new File(filename));
+					break;
+				} catch (Exception e) {
+					System.out.println("Open file failed, re-enter the file name:");
+				}
+			}
+		}else {
+			System.out.println("Enter operation:");
 		}
 		
+		if (pChoice == 1) {
+			new TCPClient(hostname, port, logger, in);
+		}else if (pChoice == 2) {
+			new UDPClient(hostname, port, logger, in);
+		}else {
+			new RPCClient(hostname, port, logger, in);
+		}
+
 	}
-	
+
 	public void doBeforeQuit() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-		@Override
-		public void run() {
-			try {
-				logger.append(new Date(), "client quit.");
-				logger.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			@Override
+			public void run() {
+				try {
+					logger.append("client quit.");
+					logger.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-		}
 		});
 	}
 

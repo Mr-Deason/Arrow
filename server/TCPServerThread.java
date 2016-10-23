@@ -34,15 +34,15 @@ public class TCPServerThread extends Thread {
 			while (true) {
 				String line = reader.readLine();
 				System.out.println("Client: " + line);
-				logger.append(new Date(), "[INFO] received request \"" + line + "\" from <" + socket.getInetAddress() + '>');
+				logger.append("[INFO] received request \"" + line + "\" from <" + socket.getInetAddress() + '>');
 				String res = null;
 				try {
 					Operation op = new Operation(line);
 					res = op.exec(map);
-					logger.append(new Date(), "[INFO] request from <" + socket.getInetAddress() + "> finished");
+					logger.append("[INFO] request from <" + socket.getInetAddress() + "> finished");
 				}catch (Exception e) {
 					res = "-1 " + e.getMessage();
-					logger.append(new Date(), "[ERROR] request from <" + socket.getInetAddress() + ">: " + e.getMessage());
+					logger.append("[ERROR] request from <" + socket.getInetAddress() + ">: " + e.getMessage());
 				}
 				
 				writer.write(res + "\n");

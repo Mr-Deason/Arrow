@@ -9,22 +9,22 @@ public class Operation {
 	private String value = null;
 	
 	public Operation(String str) throws Exception {
-		String args[] = str.split(" ");
+		String args[] = str.split(",");
 		if (args.length < 2 || args.length > 3) {
 			throw new Exception("malformed request!");
 		}
-		op = args[0].toUpperCase();
+		op = args[0].toUpperCase().trim();
 		if (args.length == 2 ) {
 			if (!op.equals("GET") && !op.equals("DELETE")) {
 				throw new Exception("malformed request!");
 			}
-			key = args[1];
+			key = args[1].trim();
 		} else {
 			if (!op.equals("PUT")) {
 				throw new Exception("malformed request!");
 			}
-			key = args[1];
-			value = args[2];
+			key = args[1].trim();
+			value = args[2].trim();
 		}
 	}
 	
