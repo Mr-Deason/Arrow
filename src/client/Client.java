@@ -116,7 +116,7 @@ public class Client {
 			@Override
 			public void run() {
 				try {
-					logger.append("client quit.");
+					logger.append("[INFO] client quit.");
 					logger.close();
 				} catch (IOException e) {
 					e.printStackTrace();
