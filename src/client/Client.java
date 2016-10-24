@@ -27,6 +27,7 @@ public class Client {
 		String hostname = "127.0.0.1";
 		int port = 18409;
 
+		//verify arguments
 		if (args.length != 0 && args.length != 2) {
 			System.out.println("client can only accept 0 or 2 arguments !");
 			System.exit(-1);
@@ -40,6 +41,7 @@ public class Client {
 				System.exit(-1);
 			}
 		}
+		
 		Client client = new Client(hostname, port);
 		client.begin();
 	}
@@ -62,6 +64,7 @@ public class Client {
 		int pChoice, iChoice;
 		Scanner in = new Scanner(System.in);
 
+		//let user select protocol
 		System.out.println("Enter a number to select protocol:");
 		System.out.println("[1]TPC");
 		System.out.println("[2]UDP");
@@ -75,6 +78,7 @@ public class Client {
 			break;
 		}
 
+		//let user select input source
 		System.out.println("Enter a number to select the source of input:");
 		System.out.println("[1]Console");
 		System.out.println("[2]File");
@@ -90,6 +94,8 @@ public class Client {
 
 		in.nextLine();
 		if (iChoice == 2) {
+			
+			//user select to use file
 			System.out.println("Enter the file name (default file \"./kvp-operations.csv\"):");
 			while (true) {
 				String filename = in.nextLine().trim();
@@ -108,7 +114,10 @@ public class Client {
 			System.out.println("Enter operation:");
 		}
 		
+		//record begin time
 		beginTime = System.currentTimeMillis();
+		
+		//start client using different protocol
 		if (pChoice == 1) {
 			new TCPClient(hostname, port, logger, in);
 		}else if (pChoice == 2) {

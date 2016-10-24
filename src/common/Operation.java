@@ -75,7 +75,7 @@ public class Operation {
 	public String toString() {
 		return string;
 	}
-	
+
 	public boolean isGet() {
 		return op.equals("GET");
 	}

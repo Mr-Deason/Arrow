@@ -39,8 +39,12 @@ public class UDPClient {
 			logger.append("[INFO] UDP client started");
 			DatagramSocket socket = null;
 			InetAddress host = InetAddress.getByName(hostname);
+			
+			//generate datagram socket
 			socket = new DatagramSocket();
 			while (in.hasNext()) {
+				
+				//receive input
 				String message = in.nextLine();
 				try {
 					Operation operation = new Operation(message);
@@ -51,13 +55,17 @@ public class UDPClient {
 				}
 				byte[] m = message.getBytes();
 
-				// Send
+				// create datagram packet
 				DatagramPacket request = new DatagramPacket(m, message.length(), host, port);
 
 				int retryCount = 0;
 				socket.setSoTimeout(2000);
+				
+				//retry loop
 				while (retryCount < retry) {
 					try {
+						
+						//send packet to server using UDP
 						socket.send(request);
 						logger.append("[INFO] send request \"" + message + "\" to " + hostname + ":" + port);
 					} catch (Exception e) {
@@ -69,7 +77,7 @@ public class UDPClient {
 						continue;
 					}
 
-					// Reply
+					// receive reply
 					byte[] buffer = new byte[1024];
 					DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
 					String response = null;
@@ -77,6 +85,8 @@ public class UDPClient {
 					try {
 						socket.receive(reply);
 						logger.append("[INFO] received response from " + hostname);
+						
+						// analyze response
 						response = new String(reply.getData()).trim();
 						String[] data = response.split(" ", 2);
 						//System.out.println(response);

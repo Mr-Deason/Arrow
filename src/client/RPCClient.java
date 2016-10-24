@@ -7,6 +7,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import javax.swing.LookAndFeel;
 
 import common.Logger;
 import common.Operation;
@@ -33,14 +34,25 @@ public class RPCClient {
 
 	public void start() { 
 		try {
+
+			logger.append("[INFO] RPC client started");
+			logger.append("[INFO] look for RPC interface in \"rmi://" + hostname + ':' + port + "/RPCServer\"...");
+			
+			//look for RPC interface
 			RPCInterf server = (RPCInterf) Naming.lookup("rmi://" + hostname + ':' + port + "/RPCServer");
+			
+			logger.append("[INFO] get interface successfully");
+			
 			while (in.hasNextLine()) {
 				String str = in.nextLine();
 				if (str.trim().equals("")) {
 					continue;
 				}
 				try {
+					//generate operation
 					Operation op = new Operation(str);
+					
+					//invoke remote method
 					if (op.isGet()) {
 						String res = server.get(op.getKey());
 						if (res != null) {
@@ -65,8 +77,12 @@ public class RPCClient {
 				}
 			}
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				logger.append("[ERROR] " + e.getMessage());
+			} catch (IOException e1) {
+			}
+		} catch (IOException e2) {
+			e2.printStackTrace();
 		}
 	}
 }
