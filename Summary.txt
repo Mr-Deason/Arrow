@@ -10,14 +10,36 @@ Java
 
 Assignment Overview:
 This is the first project that ask us to write a network program to create the communication between the client 
-and sever. There are two protocol mechanisms: TCP and UDP. The design of TCP is that: the server contains 
+and sever. There are three protocol mechanisms: TCP, UDP and RPC. The design of TCP is that: the server contains 
 a SeverSocket object to provide TCP connections and a Socket object used to communicate while the client only 
 contains a Socket object. When the connection is successful, these two Sockets communicate with each other. 
 The design of UDP is that: when the data is to be sent, a datagram packet should be created, where the hostname 
 and receive port should be defined. Then the DatagramSocket method send() need to be called to send datagram. 
 When the data is to be received, a designated port DatagramSocket should be created. Then the method receive() 
 needs to be called to receive the datagram and store it in the buffer. Finally, call the method getData() to 
-achieve the data. In addition, we also achieved three options in both UDP and TCP: put(key value), get(key) and 
+achieve the data.The design of RPC is that: Firstly, the client calls the process to send a process to send a 
+process parameter call message to the service process, and then wait for the reply message. At the sever side, 
+the process remains sleep until the call message arrives. When a call message arrives, the server obtains the 
+process parameters, calculate the results, send the reply message and then wait for the next call message.
+Finally, the client calls the process of receiving the reply message, obtaining the process results and then 
+continue to call.In addition, we also achieved three options in UDP, TCP and RPC: put(key value), get(key) and 
 delete(key).  
 
 Technical Impression
+During this project, we have met many challenges in algorithms and techniques. For example, one of the technical 
+impression is the realization of multi-thread. In TCP protocol system, the main thread is used to monitor the 
+connection between the client and server. Once there is a new connection, it will create a subthread, used for
+the communication of this client. However, in the other hand, UDP is a non-connection protocol. In UDP system,
+we don't need to build a connection between the source and end. That is to say it is not necessary to maintain
+the connection statement, including sending & receiving statements. So one server can transimit the same message
+to several clients. So when we did the part of the multi-thread, the differences between TCP and UDP is that the
+former need connection with each other while the later needn't, with only the conpcept of datagram.
+
+In addition, another challenge is that we must support mutual exclusion within our server due to a single server
+in the program. We use the "mutual exclusion" mechanism provided by the operating system to achieve mutual 
+exclusion of multi thread into the critical region, processing the shared resources. We use synchronized to declare
+a statement as a critical region. When the first thread enter the critical area, it obtains the right to use the 
+critical resources (object) , and the object will be locked, Then the statement will be executed on the object. 
+In this process, if a second thread also want to execute this statement on the same object, it must wait, because 
+as a critical resource the object has been locked. When the first thread finish executing the critical statement, 
+it will release the object lock. After that, the second thread can get the right to use the object and run.
