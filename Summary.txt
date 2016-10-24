@@ -1,8 +1,8 @@
-Project1
+Project 1
 
 Team Members:
 Yue Shen 1668045
-Kuangdi Yu 1667997
+Kuangdi Yu
 Haoming Li 1451488
 
 Envoronment:
@@ -25,7 +25,7 @@ Finally, the client calls the process of receiving the reply message, obtaining 
 continue to call.In addition, we also achieved three options in UDP, TCP and RPC: put(key value), get(key) and 
 delete(key).  
 
-Technical Impression
+Technical Impression:
 During this project, we have met many challenges in algorithms and techniques. For example, one of the technical 
 impression is the realization of multi-thread. In TCP protocol system, the main thread is used to monitor the 
 connection between the client and server. Once there is a new connection, it will create a subthread, used for
@@ -43,3 +43,8 @@ critical resources (object) , and the object will be locked, Then the statement 
 In this process, if a second thread also want to execute this statement on the same object, it must wait, because 
 as a critical resource the object has been locked. When the first thread finish executing the critical statement, 
 it will release the object lock. After that, the second thread can get the right to use the object and run.
+
+Project contributions
+Yue Shen        UDP protocol system, transaction time testing, summary report
+Kuangdi Yu      TCP & RPC protocol systems, total progam testing & modification
+Haoming Li      TCP & RPC protocol systems, summary report
