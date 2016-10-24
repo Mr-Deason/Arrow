@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
+import java.util.PrimitiveIterator.OfDouble;
 
 import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
 
@@ -43,9 +44,9 @@ public class UDPClient {
 				String message = in.nextLine();
 				try {
 					Operation operation = new Operation(message);
+					message = operation.toString();
 				} catch (Exception e) {
 					logger.append("[ERROR] " + e.getMessage());
-					System.out.println(e.getMessage());
 					continue;
 				}
 				byte[] m = message.getBytes();
@@ -61,8 +62,10 @@ public class UDPClient {
 						logger.append("[INFO] send request \"" + message + "\" to " + hostname + ":" + port);
 					} catch (Exception e) {
 						++retryCount;
-						logger.append("[ERROR] UDP send packet exception: " + e.getMessage() + ", retry " + retryCount + "...");
-						System.out.println("send packet exception: " + e.getMessage() + ", retry " + retryCount + "...");
+						logger.append("[ERROR] UDP send packet exception: " + e.getMessage() + ", retry " + retryCount
+								+ "...");
+						System.out
+								.println("send packet exception: " + e.getMessage() + ", retry " + retryCount + "...");
 						continue;
 					}
 
@@ -70,22 +73,31 @@ public class UDPClient {
 					byte[] buffer = new byte[1024];
 					DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
 					String response = null;
-					
+
 					try {
 						socket.receive(reply);
 						logger.append("[INFO] received response from " + hostname);
 						response = new String(reply.getData()).trim();
 						String[] data = response.split(" ", 2);
+						//System.out.println(response);
 						if (data[0].equals("-1") && data.length == 2) {
 							logger.append("[INFO] request \"" + message + "\" failed, message: " + data[1]);
-							System.out.println(data[1]);
-						}else if (data[0].equals("0") && data.length == 2){
-							logger.append("[INFO] request \"" + message + "\" succeed, result: " + data[1]);
-							System.out.println("succeed, result: " + data[1]);
-						}else {
+							//System.out.println(data[1]);
+						} else if (data[0].equals("0")) {
+							if (data.length == 2) {
+								logger.append("[INFO] request \"" + message + "\" succeed, result: " + data[1]);
+								//System.out.println("succeed, result: " + data[1]);
+							} else {
+								logger.append("[INFO] request \"" + message + "\" succeed");
+								//System.out.println("succeed");
+
+							}
+						} else {
 							++retryCount;
-							logger.append("[ERROR] received malformed response from " + hostname + ", retry " + retryCount + "...");
-							System.out.println("received malformed response from " + hostname + ", retry " + retryCount + "...");
+							logger.append("[ERROR] received malformed response from " + hostname + ", retry "
+									+ retryCount + "...");
+							System.out.println(
+									"received malformed response from " + hostname + ", retry " + retryCount + "...");
 							continue;
 						}
 						break;
@@ -96,15 +108,17 @@ public class UDPClient {
 						continue;
 					} catch (Exception e) {
 						++retryCount;
-						logger.append("[ERROR] UDP receive packet exception: " + e.getMessage() + ", retry " + retryCount + "...");
-						System.out.println("UDP receive packet exception: " + e.getMessage() + ", retry " + retryCount + "...");
+						logger.append("[ERROR] UDP receive packet exception: " + e.getMessage() + ", retry "
+								+ retryCount + "...");
+						// System.out.println("UDP receive packet exception: " +
+						// e.getMessage() + ", retry " + retryCount + "...");
+						e.printStackTrace();
 						continue;
 					}
 				}
 				if (retryCount == retry) {
 					logger.append("[ERROR] Reached max retry count, client is closing...");
 					System.out.println("Reached max retry count, client is closing...");
-					Thread.sleep(1000);
 					System.exit(-1);
 				}
 			}

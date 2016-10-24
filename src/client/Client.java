@@ -2,8 +2,12 @@ package client;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import javax.xml.crypto.Data;
 
 import common.Logger;
 
@@ -14,6 +18,9 @@ public class Client {
 	private static HashMap<String, String> map = null;
 
 	private Logger logger = null;
+	
+	private long beginTime;
+	private long endTime;
 
 	public static void main(String[] args) throws IOException {
 
@@ -101,6 +108,7 @@ public class Client {
 			System.out.println("Enter operation:");
 		}
 		
+		beginTime = System.currentTimeMillis();
 		if (pChoice == 1) {
 			new TCPClient(hostname, port, logger, in);
 		}else if (pChoice == 2) {
@@ -115,8 +123,13 @@ public class Client {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
+				endTime = System.currentTimeMillis();
 				try {
 					logger.append("[INFO] client quit.");
+					long usedTime = endTime - beginTime;
+					logger.append("[INFO] this transaction totally used " + usedTime + " ms");
+					System.out.println("client quit.");
+					System.out.println("this transaction totally used " + usedTime + " ms");
 					logger.close();
 				} catch (IOException e) {
 					e.printStackTrace();

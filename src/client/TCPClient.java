@@ -54,6 +54,7 @@ public class TCPClient {
 				String str = in.nextLine();
 				try {
 					Operation op = new Operation(str);
+					str = op.toString();
 				}catch (Exception e) {
 					logger.append("[ERROR] " + e.getMessage());
 					continue;

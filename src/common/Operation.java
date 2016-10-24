@@ -3,32 +3,41 @@ package common;
 import java.util.HashMap;
 
 public class Operation {
-	
+
 	private String op = null;
 	private String key = null;
 	private String value = null;
-	
+
+	private String string = null;
+
 	public Operation(String str) throws Exception {
 		String args[] = str.split(",");
 		if (args.length < 2 || args.length > 3) {
 			throw new Exception("malformed request!");
 		}
 		op = args[0].toUpperCase().trim();
-		if (args.length == 2 ) {
-			if (!op.equals("GET") && !op.equals("DELETE")) {
-				throw new Exception("malformed request!");
-			}
-			key = args[1].trim();
+		/*
+		 * if (args.length == 2 ) { if (!op.equals("GET") &&
+		 * !op.equals("DELETE")) { throw new Exception("malformed request!"); }
+		 * key = args[1].trim(); } else { if (!op.equals("PUT")) { throw new
+		 * Exception("malformed request!"); } key = args[1].trim(); value =
+		 * args[2].trim(); }
+		 */
+
+		if (!op.equals("PUT") && !op.equals("GET") && !op.equals("DELETE")) {
+			throw new Exception("malformed request!");
+		}
+		key = args[1].trim();
+		value = args[2].trim();
+
+		if (op.equals("PUT")) {
+			string = op + ',' + key + ',' + value;
 		} else {
-			if (!op.equals("PUT")) {
-				throw new Exception("malformed request!");
-			}
-			key = args[1].trim();
-			value = args[2].trim();
+			string = op + ',' + key;
 		}
 	}
-	
-	public String exec(HashMap<String, String> map) throws Exception{
+
+	public String exec(HashMap<String, String> map) throws Exception {
 		if (op.equals("GET")) {
 			String res = map.get(key);
 			if (res == null) {
@@ -51,7 +60,6 @@ public class Operation {
 		return "0";
 	}
 
-
 	public String getOp() {
 		return op;
 	}
@@ -63,15 +71,21 @@ public class Operation {
 	public String getValue() {
 		return value;
 	}
+
+	public String toString() {
+		return string;
+	}
 	
 	public boolean isGet() {
 		return op.equals("GET");
 	}
+
 	public boolean isPut() {
 		return op.equals("PUT");
 	}
+
 	public boolean isDelete() {
 		return op.equals("DELETE");
 	}
-	
+
 }
