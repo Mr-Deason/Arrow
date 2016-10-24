@@ -44,7 +44,13 @@ In this process, if a second thread also want to execute this statement on the s
 as a critical resource the object has been locked. When the first thread finish executing the critical statement, 
 it will release the object lock. After that, the second thread can get the right to use the object and run.
 
-Project contributions
+Transaction Time Testing Result:
+We test the transaction time for each protocol 10 times in both the environment of LAN and Local. In LAN area,
+the average times of TPC, UDP and RPC are 698.9ms, 1122.4ms and 997.8ms While in Local area, the average times
+of TPC, UDP and RPC are 156.6ms, 151ms and 345.3ms. From the results, we can find that same protocols use less
+time in Local area than in LAN. And in the same area, RPC spends more time than the other two protocols.    
+
+Project Contributions
 Yue Shen        UDP protocol system, transaction time testing, summary report
 Kuangdi Yu      TCP & RPC protocol systems, total progam testing & modification
 Haoming Li      TCP & RPC protocol systems, summary report
