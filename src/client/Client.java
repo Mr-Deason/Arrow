@@ -1,7 +1,12 @@
 package client;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +15,7 @@ import java.util.Scanner;
 import javax.xml.crypto.Data;
 
 import common.Logger;
+import common.Operation;
 
 public class Client {
 
@@ -18,6 +24,8 @@ public class Client {
 	private static HashMap<String, String> map = null;
 
 	private Logger logger = null;
+
+	private Scanner in;
 	
 	private long beginTime;
 	private long endTime;
@@ -64,20 +72,6 @@ public class Client {
 		int pChoice, iChoice;
 		Scanner in = new Scanner(System.in);
 
-		//let user select protocol
-		System.out.println("Enter a number to select protocol:");
-		System.out.println("[1]TPC");
-		System.out.println("[2]UDP");
-		System.out.println("[3]RPC");
-		while (true) {
-			pChoice = in.nextInt();
-			if (pChoice < 1 || pChoice > 3) {
-				System.out.println("Wrrong input !");
-				continue;
-			}
-			break;
-		}
-
 		//let user select input source
 		System.out.println("Enter a number to select the source of input:");
 		System.out.println("[1]Console");
@@ -116,18 +110,63 @@ public class Client {
 		
 		//record begin time
 		beginTime = System.currentTimeMillis();
-		
-		//start client using different protocol
-		if (pChoice == 1) {
-			new TCPClient(hostname, port, logger, in);
-		}else if (pChoice == 2) {
-			new UDPClient(hostname, port, logger, in);
-		}else {
-			new RPCClient(hostname, port, logger, in);
+
+		this.in = in;
+		try {
+			start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void start() throws IOException {
+
+		Socket socket = null;
+		BufferedReader reader = null;
+		BufferedWriter writer = null;
+
+		try {
+			logger.append("[INFO] TCP client started");
+			logger.append("[INFO] connect to " + hostname + ':' + port + "...");
+
+			// connect to server using TCP socket
+			socket = new Socket(hostname, port);
+			logger.append("[INFO] connect successfully!");
+
+			// get socket I/O stream
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+
+			writer.write("operation\n");
+			writer.flush();
+			while (in.hasNextLine()) {
+				// receive input and send to server
+				String str = in.nextLine();
+				try {
+					Operation op = new Operation(str);
+					str = op.toString();
+				} catch (Exception e) {
+					logger.append("[ERROR] " + e.getMessage());
+					continue;
+				}
+				writer.write(str + "\n");
+				writer.flush();
+				logger.append("[INFO] send request \"" + str + "\" to server");
+
+				// read response from server
+				String res = reader.readLine();
+				logger.append("[INFO] receive response \"" + res + "\" from server");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
-
 	public void doBeforeQuit() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
