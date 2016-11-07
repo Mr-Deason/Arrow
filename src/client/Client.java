@@ -156,11 +156,11 @@ public class Client {
 				}
 				writer.write(str + "\n");
 				writer.flush();
-				logger.append("[INFO] send request \"" + str + "\" to server");
+//				logger.append("[INFO] send request \"" + str + "\" to server");
 
 				// read response from server
 				String res = reader.readLine();
-				logger.append("[INFO] receive response \"" + res + "\" from server");
+//				logger.append("[INFO] receive response \"" + res + "\" from server");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
