@@ -53,20 +53,8 @@ public class RPCClient {
 					Operation op = new Operation(str);
 					
 					//invoke remote method
-					if (op.isGet()) {
-						String res = server.get(op.getKey());
-						if (res != null) {
-							logger.append("[INFO] get value: \"" + res +'\"');
-						}else {
-							logger.append("[INFO] no such value!");
-						}
-					}else if (op.isDelete()) {
-						int res = server.delete(op.getKey());
-						logger.append("[INFO] operation result: " + res);
-					}else {
-						int res = server.put(op.getKey(), op.getValue());
-						logger.append("[INFO] operation result: " + res);
-					}
+					String res = server.request(op.toString());
+//					logger.append("[INFO] server respond: " + res);
 				}catch (Exception e) {
 					try {
 						logger.append("[ERROR] " + e.getMessage());

@@ -64,20 +64,6 @@ public class Client {
 		int pChoice, iChoice;
 		Scanner in = new Scanner(System.in);
 
-		//let user select protocol
-		System.out.println("Enter a number to select protocol:");
-		System.out.println("[1]TPC");
-		System.out.println("[2]UDP");
-		System.out.println("[3]RPC");
-		while (true) {
-			pChoice = in.nextInt();
-			if (pChoice < 1 || pChoice > 3) {
-				System.out.println("Wrrong input !");
-				continue;
-			}
-			break;
-		}
-
 		//let user select input source
 		System.out.println("Enter a number to select the source of input:");
 		System.out.println("[1]Console");
@@ -116,15 +102,8 @@ public class Client {
 		
 		//record begin time
 		beginTime = System.currentTimeMillis();
-		
-		//start client using different protocol
-		if (pChoice == 1) {
-			new TCPClient(hostname, port, logger, in);
-		}else if (pChoice == 2) {
-			new UDPClient(hostname, port, logger, in);
-		}else {
-			new RPCClient(hostname, port, logger, in);
-		}
+
+		new RPCClient(hostname, port, logger, in);
 
 	}
 
